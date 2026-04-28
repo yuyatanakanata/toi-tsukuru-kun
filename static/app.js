@@ -64,8 +64,8 @@ async function runGenerate() {
     formData.append("notes", notes);
     if (refFileInput.files[0]) {
       const file = refFileInput.files[0];
-      if (file.size > 5 * 1024 * 1024) {
-        showError("ファイルサイズは5MB以下にしてください");
+      if (file.size > 10 * 1024 * 1024) {
+        showError("ファイルサイズは10MB以下にしてください");
         return;
       }
       formData.append("ref_file", file);

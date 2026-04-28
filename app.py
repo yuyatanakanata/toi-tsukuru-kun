@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB
 
 SYSTEM_PROMPT = """あなたは「思考実験展」のための「大問い」を作る専門家です。
 
@@ -184,7 +185,10 @@ def generate():
         target = (request.form.get("target") or "大人向け").strip()
         notes = (request.form.get("notes") or "").strip()
         uploaded = request.files.get("ref_file")
-        file_text = extract_file_text(uploaded) if uploaded and uploaded.filename else ""
+        try:
+            file_text = extract_file_text(uploaded) if uploaded and uploaded.filename else ""
+        except Exception:
+            file_text = ""
     else:
         data = request.json or {}
         theme = (data.get("theme") or "").strip()
