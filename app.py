@@ -225,14 +225,15 @@ JSON形式のみで出力してください。"""
 
     MODELS = [
         "llama-3.1-70b-versatile",
-        "llama-3.3-70b-versatile",
+        "llama3-70b-8192",
+        "gemma2-9b-it",
         "llama-3.1-8b-instant",
+        "llama-3.3-70b-versatile",
     ]
 
     def generate_stream():
         try:
             client = get_client()
-            last_err = None
             for model in MODELS:
                 try:
                     response = client.chat.completions.create(
@@ -250,12 +251,8 @@ JSON形式のみで出力してください。"""
                             yield f"data: {json.dumps({'text': text})}\n\n"
                     yield "data: [DONE]\n\n"
                     return
-                except Exception as e:
-                    msg = str(e)
-                    if "rate_limit" in msg.lower() or "429" in msg or "decommissioned" in msg.lower():
-                        last_err = msg
-                        continue
-                    raise
+                except Exception:
+                    continue
             yield f"data: {json.dumps({'error': '利用可能なモデルがありません。しばらく待ってから再試行してください。'})}\n\n"
         except ValueError as e:
             yield f"data: {json.dumps({'error': str(e)})}\n\n"
