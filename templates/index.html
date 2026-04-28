@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>問いつくるくん | 思考実験展</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>問いつくるくん</h1>
+      <p class="subtitle">思考実験展の「大問い」を作る</p>
+    </header>
+
+    <main>
+      <section class="form-section">
+        <h2>要件を入力</h2>
+        <form id="generate-form">
+
+          <div class="form-group">
+            <label for="theme">テーマ・葛藤の核 <span class="required">*</span></label>
+            <input type="text" id="theme" placeholder="例：自己犠牲と自己保存、記憶と存在、正義と愛情">
+            <small>どんな葛藤を問いの中心に置くか</small>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="world-style">世界観の方向性</label>
+              <select id="world-style">
+                <option value="ファンタジー">ファンタジー（剣と魔法）</option>
+                <option value="SF・近未来">SF・近未来</option>
+                <option value="現代日本">現代日本</option>
+                <option value="和風ファンタジー">和風ファンタジー</option>
+                <option value="ダークファンタジー">ダークファンタジー</option>
+                <option value="学園もの">学園もの</option>
+                <option value="その他">その他（備考に記入）</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="target">ターゲット</label>
+              <select id="target">
+                <option value="大人向け（20〜30代）">大人向け（20〜30代）</option>
+                <option value="学生向け（高校・大学生）">学生向け（高校・大学生）</option>
+                <option value="幅広い年代">幅広い年代</option>
+                <option value="カップル・ペア向け">カップル・ペア向け</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ip-collab">コラボIP（任意）</label>
+            <input type="text" id="ip-collab" placeholder="例：進撃の巨人、鬼滅の刃、Re:ゼロ、ブルーアーカイブ">
+            <small>アニメ・漫画・ラノベ・ゲームなど。空白でオリジナル世界観</small>
+          </div>
+
+          <div class="form-group">
+            <label for="notes">追加要件・備考（任意）</label>
+            <textarea id="notes" rows="3" placeholder="例：・参加者が3人〜4人グループ&#10;・展示時間は60分&#10;・自己犠牲よりも、他者との関係性を問いたい"></textarea>
+          </div>
+
+          <button type="submit" id="submit-btn">大問いを生成する</button>
+        </form>
+      </section>
+
+      <section class="result-section" id="result-section" style="display:none">
+        <div class="result-header">
+          <h2>生成された大問い</h2>
+          <button id="copy-btn" class="copy-btn">コピー</button>
+        </div>
+        <div id="result-content" class="result-content">
+          <div id="streaming-output" class="streaming"></div>
+          <div id="parsed-output"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
