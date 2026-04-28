@@ -21,6 +21,13 @@ function clearFile() {
   fileClearBtn.style.display = "none";
 }
 
+document.querySelectorAll('input[name="ip-mode"]').forEach(radio => {
+  radio.addEventListener("change", () => {
+    document.getElementById("ip-collab-field").style.display =
+      radio.value === "collab" ? "block" : "none";
+  });
+});
+
 let fullText = "";
 
 form.addEventListener("submit", async (e) => {

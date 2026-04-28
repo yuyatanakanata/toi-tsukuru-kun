@@ -49,9 +49,19 @@
           </div>
 
           <div class="form-group">
-            <label for="ip-collab">コラボIP（任意）</label>
-            <input type="text" id="ip-collab" placeholder="例：進撃の巨人、鬼滅の刃、Re:ゼロ、ブルーアーカイブ">
-            <small>アニメ・漫画・ラノベ・ゲームなど。空白でオリジナル世界観</small>
+            <label>世界観ベース</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="ip-mode" value="original" checked> オリジナル世界観
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="ip-mode" value="collab"> IPコラボあり
+              </label>
+            </div>
+            <div id="ip-collab-field" style="display:none; margin-top:10px">
+              <input type="text" id="ip-collab" placeholder="例：進撃の巨人、鬼滅の刃、Re:ゼロ、ブルーアーカイブ">
+              <small>アニメ・漫画・ラノベ・ゲームなど。そのIPの世界観・キャラクターをベースに生成します</small>
+            </div>
           </div>
 
           <div class="form-group">
