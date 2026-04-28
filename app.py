@@ -223,23 +223,40 @@ def generate():
 
 JSON形式のみで出力してください。"""
 
+    MODELS = [
+        "llama-3.1-70b-versatile",
+        "llama-3.3-70b-versatile",
+        "llama-3.1-8b-instant",
+    ]
+
     def generate_stream():
         try:
             client = get_client()
-            response = client.chat.completions.create(
-                model="mixtral-8x7b-32768",
-                messages=[
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": user_prompt},
-                ],
-                stream=True,
-                max_tokens=8000,
-            )
-            for chunk in response:
-                text = chunk.choices[0].delta.content or ""
-                if text:
-                    yield f"data: {json.dumps({'text': text})}\n\n"
-            yield "data: [DONE]\n\n"
+            last_err = None
+            for model in MODELS:
+                try:
+                    response = client.chat.completions.create(
+                        model=model,
+                        messages=[
+                            {"role": "system", "content": SYSTEM_PROMPT},
+                            {"role": "user", "content": user_prompt},
+                        ],
+                        stream=True,
+                        max_tokens=8000,
+                    )
+                    for chunk in response:
+                        text = chunk.choices[0].delta.content or ""
+                        if text:
+                            yield f"data: {json.dumps({'text': text})}\n\n"
+                    yield "data: [DONE]\n\n"
+                    return
+                except Exception as e:
+                    msg = str(e)
+                    if "rate_limit" in msg.lower() or "429" in msg or "decommissioned" in msg.lower():
+                        last_err = msg
+                        continue
+                    raise
+            yield f"data: {json.dumps({'error': '利用可能なモデルがありません。しばらく待ってから再試行してください。'})}\n\n"
         except ValueError as e:
             yield f"data: {json.dumps({'error': str(e)})}\n\n"
         except Exception as e:
