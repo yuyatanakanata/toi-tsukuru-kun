@@ -4,6 +4,22 @@ const streamingOutput = document.getElementById("streaming-output");
 const parsedOutput = document.getElementById("parsed-output");
 const submitBtn = document.getElementById("submit-btn");
 const copyBtn = document.getElementById("copy-btn");
+const refFileInput = document.getElementById("ref-file");
+const fileNameDisplay = document.getElementById("file-name-display");
+const fileClearBtn = document.getElementById("file-clear-btn");
+
+refFileInput.addEventListener("change", () => {
+  if (refFileInput.files[0]) {
+    fileNameDisplay.textContent = refFileInput.files[0].name;
+    fileClearBtn.style.display = "inline-block";
+  }
+});
+
+function clearFile() {
+  refFileInput.value = "";
+  fileNameDisplay.textContent = "企画書・台本などをアップロード";
+  fileClearBtn.style.display = "none";
+}
 
 let fullText = "";
 
@@ -33,10 +49,24 @@ async function runGenerate() {
   resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
 
   try {
+    const formData = new FormData();
+    formData.append("theme", theme);
+    formData.append("ip_collab", ipCollab);
+    formData.append("world_style", worldStyle);
+    formData.append("target", target);
+    formData.append("notes", notes);
+    if (refFileInput.files[0]) {
+      const file = refFileInput.files[0];
+      if (file.size > 5 * 1024 * 1024) {
+        showError("ファイルサイズは5MB以下にしてください");
+        return;
+      }
+      formData.append("ref_file", file);
+    }
+
     const response = await fetch("/generate", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ theme, ip_collab: ipCollab, world_style: worldStyle, target, notes }),
+      body: formData,
     });
 
     const reader = response.body.getReader();

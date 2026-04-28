@@ -92,17 +92,37 @@ def get_model():
 def index():
     return render_template("index.html")
 
+def extract_file_text(f):
+    ext = (f.filename or "").rsplit(".", 1)[-1].lower()
+    if ext == "pdf":
+        import pypdf
+        reader = pypdf.PdfReader(f)
+        return "\n".join(page.extract_text() or "" for page in reader.pages)
+    return f.read().decode("utf-8", errors="ignore")
+
 @app.route("/generate", methods=["POST"])
 def generate():
-    data = request.json
-    theme = (data.get("theme") or "").strip()
-    ip_collab = (data.get("ip_collab") or "").strip()
-    world_style = (data.get("world_style") or "ファンタジー").strip()
-    target = (data.get("target") or "大人向け").strip()
-    notes = (data.get("notes") or "").strip()
+    if request.content_type and "multipart/form-data" in request.content_type:
+        theme = (request.form.get("theme") or "").strip()
+        ip_collab = (request.form.get("ip_collab") or "").strip()
+        world_style = (request.form.get("world_style") or "ファンタジー").strip()
+        target = (request.form.get("target") or "大人向け").strip()
+        notes = (request.form.get("notes") or "").strip()
+        uploaded = request.files.get("ref_file")
+        file_text = extract_file_text(uploaded) if uploaded and uploaded.filename else ""
+    else:
+        data = request.json or {}
+        theme = (data.get("theme") or "").strip()
+        ip_collab = (data.get("ip_collab") or "").strip()
+        world_style = (data.get("world_style") or "ファンタジー").strip()
+        target = (data.get("target") or "大人向け").strip()
+        notes = (data.get("notes") or "").strip()
+        file_text = ""
 
     if not theme:
         return {"error": "テーマ・葛藤の核を入力してください"}, 400
+
+    ref_section = f"\n\n## 参考資料（アップロードされたファイル）\n{file_text[:8000]}" if file_text.strip() else ""
 
     user_prompt = f"""以下の要件で「大問い」を作成してください。
 
@@ -111,7 +131,7 @@ def generate():
 - 世界観の方向性: {world_style}
 - ターゲット: {target}
 {"- コラボIP: " + ip_collab if ip_collab else ""}
-{"- 追加要件: " + notes if notes else ""}
+{"- 追加要件: " + notes if notes else ""}{ref_section}
 
 JSON形式のみで出力してください。"""
 

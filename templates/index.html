@@ -59,6 +59,19 @@
             <textarea id="notes" rows="3" placeholder="例：・参加者が3人〜4人グループ&#10;・展示時間は60分&#10;・自己犠牲よりも、他者との関係性を問いたい"></textarea>
           </div>
 
+          <div class="form-group">
+            <label for="ref-file">参考ファイル（任意）</label>
+            <div class="file-upload-area" id="file-upload-area">
+              <input type="file" id="ref-file" accept=".txt,.md,.pdf" style="display:none">
+              <div class="file-upload-label" id="file-label" onclick="document.getElementById('ref-file').click()">
+                <span class="file-icon">📄</span>
+                <span id="file-name-display">企画書・台本などをアップロード</span>
+              </div>
+              <button type="button" id="file-clear-btn" class="file-clear-btn" style="display:none" onclick="clearFile()">✕</button>
+            </div>
+            <small>対応形式: .txt / .md / .pdf（最大5MB）</small>
+          </div>
+
           <button type="submit" id="submit-btn">大問いを生成する</button>
         </form>
       </section>
