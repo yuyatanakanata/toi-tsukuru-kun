@@ -233,6 +233,7 @@ JSON形式のみで出力してください。"""
     ]
 
     def generate_stream():
+        last_error = "不明なエラー"
         try:
             client = get_client()
             for model in MODELS:
@@ -252,9 +253,10 @@ JSON形式のみで出力してください。"""
                             yield f"data: {json.dumps({'text': text})}\n\n"
                     yield "data: [DONE]\n\n"
                     return
-                except Exception:
+                except Exception as model_err:
+                    last_error = str(model_err)
                     continue
-            yield f"data: {json.dumps({'error': '利用可能なモデルがありません。しばらく待ってから再試行してください。'})}\n\n"
+            yield f"data: {json.dumps({'error': f'APIエラー: {last_error}'})}\n\n"
         except ValueError as e:
             yield f"data: {json.dumps({'error': str(e)})}\n\n"
         except Exception as e:
