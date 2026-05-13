@@ -14,8 +14,9 @@ Flask + Groq API (llama-3.3-70b-versatile) + Render でデプロイ。
 
 ### API・依存関係
 - Gemini APIは使わない（nomore.jp組織ポリシーおよびアカウント問題で安定動作しない）
-- Groq APIを使う。`groq==0.11.0` + `httpx<0.28.0` のバージョン固定必須（それ以外はproxiesエラーが出る）
-- `GROQ_API_KEY` をRenderのEnvironment Variablesに設定する
+- Groq APIは使わない（モデル廃止が頻繁で安定しない）
+- OpenAI APIを使う。モデルは `gpt-4o-mini`（フォールバック: `gpt-4o`）
+- `OPENAI_API_KEY` をRenderのEnvironment Variablesに設定する
 
 ### 言語・表記
 - 「デジタル」と表記する（「ディジタル」は使わない）
@@ -53,6 +54,6 @@ Flask + Groq API (llama-3.3-70b-versatile) + Render でデプロイ。
 - バグを報告されたらログ・エラー内容を確認してから直す
 
 ## 同じミスをしたら追記する
-- Gemini APIは使わない（quota/組織ポリシーで動かない）→ Groqを使う
-- `groq==0.11.0` + `httpx<0.28.0` の固定が必須（proxiesエラー対策）
+- Gemini APIは使わない（quota/組織ポリシーで動かない）
+- Groq APIは使わない（モデル廃止が頻繁、2025年初頭にllama-3.1等が廃止済み）→ OpenAI APIを使う
 - 「ディジタル」ではなく「デジタル」と書く
