@@ -229,6 +229,7 @@ JSON形式のみで出力してください。"""
 
     MODELS = [
         "gpt-5.4-mini",
+        "gpt-5.4-nano",
         "gpt-4o-mini",
     ]
 
