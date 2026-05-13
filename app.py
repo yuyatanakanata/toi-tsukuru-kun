@@ -228,8 +228,8 @@ def generate():
 JSON形式のみで出力してください。"""
 
     MODELS = [
+        "gpt-5.4-mini",
         "gpt-4o-mini",
-        "gpt-4o",
     ]
 
     def generate_stream():
